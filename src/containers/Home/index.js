@@ -1,32 +1,28 @@
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getPokemons } from '../../api/getPokemons';
 import PokemonList from '../../components/PokemonList';
 import Searcher from '../../components/Searcher';
-import { setPokemon as setPokemonsAction } from '../../actions';
+import { setPokemon } from '../../actions';
 import './styles.css';
 
-const mapStateToProps = state => ({
-  list: state.list,
-});
+function Home() {
 
-const mapDispatchToProps = (dispatch) => ({
-  setPokemons: (value) => dispatch(setPokemonsAction(value))
-});
-
-function Home({setPokemons, pokemons}) {
+  const dispatch = useDispatch();
+  const list = useSelector(state => state.list);
+  
   useEffect(() => {
     getPokemons().then((res) => {
-      setPokemons(res.results);
+      dispatch(setPokemon(res.results));
     });
   }, [])
 
   return (
     <div className='Home'>
       <Searcher />
-      <PokemonList />
+      <PokemonList pokemons={list} />
     </div>
   );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps) (Home);
+export default Home;
