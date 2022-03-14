@@ -7,10 +7,10 @@ const PokemonCard = ({pokemon}) => {
   return (
     <Grid.Column mobile={16} tablet={8} computer={4}>
       <div className='PokemonCard'>
-        <Image centered src='https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/132.png' alt='Pokemon front' />
+        <Image centered src={pokemon.sprites.front_default} />
         <Icon name='favorite' color={FAV_COLOR} />
         <p className='Pokemon-title'>{pokemon.name}</p>
-        <Label color={MAIN_COLOR}>Normal</Label>
+        {pokemon.types.map((type) => (<Label color={MAIN_COLOR} key={`${pokemon.id}-${type.type.name}`}>{type.type.name}</Label>))}
       </div>
     </Grid.Column>
   );

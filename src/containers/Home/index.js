@@ -5,6 +5,7 @@ import PokemonList from '../../components/PokemonList';
 import { getPokemons } from '../../api/getPokemons';
 import { setPokemons, setError } from '../../actions';
 import './styles.css';
+import axios from 'axios';
 
 function Home() {
   const pokemons = useSelector((state) => state.list);
@@ -13,7 +14,14 @@ function Home() {
   useEffect(() => {
     getPokemons()
       .then((res) => {
-        dispatch(setPokemons(res.results));
+        const pokemonList = res.results;
+        return Promise.all(
+          pokemonList.map((pokemon) => axios.get(pokemon.url))
+        );
+      })
+      .then((pokemonResponse) =>{
+        const pokemonsData = pokemonResponse.map((response) => response.data);
+        dispatch(setPokemons(pokemonsData));
       })
       .catch((error) => {
         dispatch(setError({ message: 'Ocurrió un error' , error}));
